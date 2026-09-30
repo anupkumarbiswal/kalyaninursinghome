@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | Kalyani Nursing Home</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231a6b8a'/><text x='50%25' y='58%25' font-size='20' text-anchor='middle' dominant-baseline='middle' fill='white'>⚕</text></svg>" />
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     LOGIN PAGE
+════════════════════════════════════════════════════════ -->
+<div class="login-page" id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">🏥</div>
+    <h1>Admin Panel</h1>
+    <p class="subtitle">Kalyani Nursing Home — Appointment Management</p>
+
+    <form class="login-form" id="loginForm" novalidate>
+      <div>
+        <label for="adminUser">Username</label>
+        <div class="input-wrap">
+          <span class="icon">👤</span>
+          <input type="text" id="adminUser" placeholder="Enter username" autocomplete="username" required />
+        </div>
+      </div>
+
+      <div>
+        <label for="adminPass">Password</label>
+        <div class="input-wrap">
+          <span class="icon">🔒</span>
+          <input type="password" id="adminPass" placeholder="Enter password" autocomplete="current-password" required />
+          <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password visibility">👁</button>
+        </div>
+      </div>
+
+      <div class="login-error" id="loginError">❌ Invalid username or password</div>
+
+      <button type="submit" class="btn-login">🔑 Sign In</button>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     ADMIN SHELL
+════════════════════════════════════════════════════════ -->
+<div class="admin-shell hidden" id="adminShell">
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Admin navigation">
+    <div class="sidebar-brand">
+      <div class="brand-icon">🏥</div>
+      <div>
+        <div class="brand-name">Kalyani Nursing Home</div>
+        <div class="brand-sub">Admin Panel</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="#" class="active" data-view="dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="#" data-view="appointments">
+        <span class="nav-icon">📅</span> Appointments
+        <span class="badge" id="pendingBadge">0</span>
+      </a>
+
+      <div class="nav-section-label" style="margin-top:.75rem;">Quick Access</div>
+      <a href="index.html" target="_blank">
+        <span class="nav-icon">🌐</span> View Website
+      </a>
+      <a href="contact.html" target="_blank">
+        <span class="nav-icon">📬</span> Booking Form
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      Logged in as <strong id="sidebarUser">Admin</strong>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ── -->
+  <main class="admin-main">
+
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <button class="hamburger-admin" id="hamburgerAdmin" aria-label="Toggle sidebar">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-right">
+        <span class="topbar-time" id="liveClock"></span>
+        <div class="admin-avatar" title="Admin">A</div>
+        <button class="btn-logout" id="logoutBtn">↩ Logout</button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="admin-content">
+
+      <!-- ══ DASHBOARD VIEW ══ -->
+      <div id="view-dashboard">
+        <div class="page-header">
+          <h1>📊 Dashboard</h1>
+          <p>Overview of all appointments and activity at Kalyani Nursing Home</p>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card-icon blue">📅</div>
+            <div>
+              <div class="stat-card-val" id="stat-total">0</div>
+              <div class="stat-card-lbl">Total Appointments</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon yellow">⏳</div>
+            <div>
+              <div class="stat-card-val" id="stat-pending">0</div>
+              <div class="stat-card-lbl">Pending</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon green">✅</div>
+            <div>
+              <div class="stat-card-val" id="stat-confirmed">0</div>
+              <div class="stat-card-lbl">Confirmed</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon blue">🏁</div>
+            <div>
+              <div class="stat-card-val" id="stat-completed">0</div>
+              <div class="stat-card-lbl">Completed</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon red">❌</div>
+            <div>
+              <div class="stat-card-val" id="stat-cancelled">0</div>
+              <div class="stat-card-lbl">Cancelled</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon orange">📆</div>
+            <div>
+              <div class="stat-card-val" id="stat-today">0</div>
+              <div class="stat-card-lbl">Today's Appointments</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today Panel -->
+        <div class="today-panel">
+          <h3>📆 Today's Summary — <span id="todayDate"></span></h3>
+          <div class="today-chips">
+            <div class="today-chip">⏳ Pending: <span class="chip-num" id="chip-pending">0</span></div>
+            <div class="today-chip">✅ Confirmed: <span class="chip-num" id="chip-confirmed">0</span></div>
+            <div class="today-chip">🏁 Completed: <span class="chip-num" id="chip-completed">0</span></div>
+            <div class="today-chip">❌ Cancelled: <span class="chip-num" id="chip-cancelled">0</span></div>
+          </div>
+        </div>
+
+        <!-- Recent Appointments -->
+        <div class="table-card">
+          <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--a-border);display:flex;align-items:center;justify-content:space-between;">
+            <h3 style="font-size:.95rem;color:var(--a-primary-dark);">🕐 Recent Appointments (Last 10)</h3>
+            <button class="btn-add" onclick="switchView('appointments')">View All →</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Patient</th>
+                  <th>Department</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ APPOINTMENTS VIEW ══ -->
+      <div id="view-appointments" style="display:none;">
+        <div class="page-header">
+          <h1>📅 Appointments</h1>
+          <p>Manage all patient appointment requests</p>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="table-toolbar">
+          <div class="search-wrap">
+            <span class="icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search by name, phone, department…" />
+          </div>
+          <select class="filter-select" id="statusFilter">
+            <option value="">All Status</option>
+            <option value="pending">⏳ Pending</option>
+            <option value="confirmed">✅ Confirmed</option>
+            <option value="completed">🏁 Completed</option>
+            <option value="cancelled">❌ Cancelled</option>
+          </select>
+          <select class="filter-select" id="deptFilter">
+            <option value="">All Departments</option>
+            <option value="general">General Medicine</option>
+            <option value="gynaecology">Gynaecology</option>
+            <option value="surgery">Surgery</option>
+            <option value="paediatrics">Paediatrics</option>
+            <option value="physiotherapy">Physiotherapy</option>
+            <option value="diagnostics">Diagnostics</option>
+            <option value="emergency">Emergency</option>
+            <option value="other">Other</option>
+          </select>
+          <button class="btn-export" id="btnExport">📥 Export CSV</button>
+          <button class="btn-add" id="btnAdd">➕ Add Appointment</button>
+        </div>
+
+        <div class="table-card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-sort="id">#</th>
+                  <th data-sort="name">Patient ▲</th>
+                  <th data-sort="phone">Phone</th>
+                  <th data-sort="dept">Department</th>
+                  <th data-sort="date">Pref. Date</th>
+                  <th data-sort="booked">Booked On</th>
+                  <th data-sort="status">Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="apptTbody"></tbody>
+            </table>
+          </div>
+          <div class="table-footer">
+            <span id="apptCount">Showing 0 appointments</span>
+            <div class="pagination" id="pagination"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.admin-content -->
+  </main>
+</div><!-- /#adminShell -->
+
+<!-- ════════════════════════════════════════════════════════
+     ADD / EDIT APPOINTMENT MODAL
+════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="apptModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">➕ Add Appointment</h2>
+      <button class="modal-close" id="modalClose" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body">
+      <form class="modal-form" id="apptForm" novalidate>
+        <input type="hidden" id="apptId" />
+        <div class="form-row">
+          <div class="form-field">
+            <label for="mFirstName">First Name *</label>
+            <input type="text" id="mFirstName" placeholder="First name" required />
+          </div>
+          <div class="form-field">
+            <label for="mLastName">Last Name *</label>
+            <input type="text" id="mLastName" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="mPhone">Phone *</label>
+            <input type="tel" id="mPhone" placeholder="+91 XXXXX XXXXX" required />
+          </div>
+          <div class="form-field">
+            <label for="mEmail">Email</label>
+            <input type="email" id="mEmail" placeholder="email@example.com" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="mDept">Department *</label>
+            <select id="mDept" required>
+              <option value="" disabled selected>Select department</option>
+              <option value="general">General Medicine</option>
+              <option value="gynaecology">Gynaecology &amp; Maternity</option>
+              <option value="surgery">Surgery</option>
+              <option value="paediatrics">Paediatrics</option>
+              <option value="physiotherapy">Physiotherapy</option>
+              <option value="diagnostics">Lab &amp; Diagnostics</option>
+              <option value="emergency">Emergency</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="mDate">Preferred Date</label>
+            <input type="date" id="mDate" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="mStatus">Status</label>
+            <select id="mStatus">
+              <option value="pending">⏳ Pending</option>
+              <option value="confirmed">✅ Confirmed</option>
+              <option value="completed">🏁 Completed</option>
+              <option value="cancelled">❌ Cancelled</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-field full">
+          <label for="mMessage">Notes / Concern</label>
+          <textarea id="mMessage" placeholder="Patient's message or clinical notes…"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel-modal" id="modalCancel">Cancel</button>
+      <button class="btn-save" id="modalSave">💾 Save Appointment</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     VIEW DETAIL MODAL
+════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="viewModal" role="dialog" aria-modal="true" aria-labelledby="viewTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="viewTitle">📋 Appointment Details</h2>
+      <button class="modal-close" id="viewModalClose" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="detail-grid" id="detailGrid"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel-modal" id="viewModalCloseBtn">Close</button>
+      <button class="btn-save" id="viewEditBtn">✏️ Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer" aria-live="polite"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

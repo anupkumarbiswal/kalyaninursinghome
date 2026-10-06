@@ -8,8 +8,8 @@
 /* ── Constants ─────────────────────────────────────────────── */
 const STORAGE_KEY  = 'knh_appointments';
 const AUTH_KEY     = 'knh_admin_auth';
-const ADMIN_USER   = 'admin';
-const ADMIN_PASS   = 'kalyani123';
+const ADMIN_USER   = 'nursinghomeangul';
+const ADMIN_PASS   = 'Angul@19';
 const ROWS_PER_PAGE = 10;
 
 /* ── State ─────────────────────────────────────────────────── */
